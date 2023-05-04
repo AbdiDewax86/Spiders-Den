@@ -1,0 +1,218 @@
+<html>
+    <head>
+        <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+        <!-- aframe-extras -->
+        <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+        <!-- proxy-event -->
+        <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+        <!-- super hands -->
+        <script src="https://unpkg.com/super-hands@3.0.1/dist/super-hands.min.js"></script>
+        <!-- aframe-physics-extras -->
+        <script src="https://unpkg.com/aframe-physics-extras@0.1.2/dist/aframe-physics-extras.min.js"></script>
+        <!-- lookat -->
+        <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+    </head>
+    <body>
+        <a-scene>
+            <!-- Assets -->
+            <a-assets>
+                <img src="./textures/checkerboard.png" id="base">
+                <a-asset-item id="gun" src="./models/scene.gltf"></a-asset-item>
+                <audio id="sfxhit" src="./sounds/minecraftxp.mp3"></audio>
+                <audio id="sfxhover" src="./sounds/click.wav"></audio>
+                <audio id="sfxselect" src="./sounds/select.wav"></audio>
+                <audio id="sfxreload" src="./sounds/reload.wav"></audio>
+            </a-assets>
+            <!-- Controller -->
+            <a-entity laser-controls="
+                hand:right;
+                color:red;"
+            ></a-entity>
+            <!-- Cursor -->
+            <a-entity camera look-controls wasd-controls="acceleration:0" position="-2 2 0" id="cam">
+                <a-cursor id="cursor"></a-cursor>
+                <a-gltf-model id="gunmodel" src="#gun" position="0 -0.2 -0.75" rotation="0 90 0" scale="0.1 0.1 0.1" visible="false"></a-gltf-model>
+            </a-entity>
+            <!-- Env Objects -->
+            <!-- Lighting -->
+            <a-entity
+                light="
+                    type: ambient;
+                    color: #696969;
+                "
+            >
+            </a-entity>
+            <a-entity
+                light="
+                    type: point;
+                    color: #ffffff;
+                    intensity: 0.6;
+                    castShadow: true;
+                "
+                position="0 18 6"
+            >
+            </a-entity>
+            <!-- Planes -->
+            <a-entity
+                geometry="
+                    primitive: plane;
+                    width: 24;
+                    height: 24;
+                "
+                material="src: #base; repeat: 6 6; color: #ababab;"
+                rotation="-90 0 0"
+                position="0 0 -6"
+            >
+            </a-entity>
+            <a-entity
+                geometry="
+                    primitive: plane;
+                    width: 24;
+                    height: 12;
+                "
+                material="src: #base; repeat: 6 3; color: #ababab"
+                rotation="0 0 0"
+                position="0 6 -18"
+            >
+            </a-entity>
+            <a-entity
+                geometry="
+                    primitive: plane;
+                    width: 24;
+                    height: 12;
+                "
+                material="src: #base; repeat: 6 3; color: #ababab"
+                rotation="0 -180 0"
+                position="0 6 6"
+            >
+            </a-entity>
+            <a-entity
+                geometry="
+                    primitive: plane;
+                    width: 24;
+                    height: 12;
+                "
+                material="src: #base; repeat: 6 3; color: #ababab"
+                rotation="0 90 0"
+                position="-12 6 -6"
+            >
+            </a-entity>
+            <a-entity
+                geometry="
+                    primitive: plane;
+                    width: 24;
+                    height: 12;
+                "
+                material="src: #base; repeat: 6 3; color: #ababab"
+                rotation="0 -90 0"
+                position="12 6 -6"
+            >
+            </a-entity>
+            <!-- Boxes -->
+            <a-entity
+                geometry="
+                    primitive: box; 
+                    width: 2;
+                    height: 1.5;
+                    depth: 6;
+                "
+                material="color: #ababab"
+                rotation="0 -90 0"
+                position="-9 0.75 -6"
+            >
+            </a-entity>
+            <a-entity
+                geometry="
+                    primitive: box; 
+                    width: 2;
+                    height: 1.5;
+                    depth: 6;
+                "
+                material="color: #ababab"
+                rotation="0 -90 0"
+                position="5 0.75 -6"
+            >
+            </a-entity>
+            <a-entity
+                geometry="
+                    primitive: box; 
+                    width: 24;
+                    height: 4;
+                    depth: 4;
+                "
+                material="src: #base; repeat: 6 1; color: #ababab"
+                rotation="0 -90 0"
+                position="10 2 -6"
+            >
+            </a-entity>
+            <!-- Text -->
+            <a-entity
+                text="
+                    value: Spider's Den;
+                    color: #fff;
+                    align: center;
+                "
+                scale="25 25 25"
+                position="0 10 -17;"
+                geometry="
+                    primitive: plane;
+                    width: auto;
+                    height: auto;
+                "
+                material="color: #696969;"
+            ></a-entity>
+            <a-entity
+                id="score"
+                text="
+                    value: Score: ;
+                    color: #fff;
+                    align: center;
+                "
+                scale="20 20 20"
+                position="0 7 -17;"
+                geometry="
+                    primitive: plane;
+                    width: auto;
+                    height: auto;
+                "
+                material="color: #696969;"
+            ></a-entity>
+            <!-- Buttons -->
+            <a-entity
+            id="guntoggle"
+            text="
+                value: Use Pew Pew;
+                color: #fff;
+                align: center;
+            "
+            scale="1 1 1"
+            position="-2 0.75 -2;"
+            rotation="0 90 0"
+            geometry="
+                primitive: circle;
+                width: 2;
+                radius: 0.15;
+            "
+            material="color: #696969;"
+            animation__hover="
+                property: components.material.material.color;
+                type: color;
+                to: #ababab;
+                dur: 0;
+                startEvents: mouseenter;
+            "
+            animation__leave="
+                property: components.material.material.color;
+                type: color;
+                to: #696969;
+                dur: 500;
+                startEvents: mouseleave;
+            "
+            look-at="#cam"
+            ></a-entity>
+            <!-- Test Targets -->
+        </a-scene>
+        <script src="scripts/gameManager.js">
+        </script>
+    </body>
+</html>
